@@ -83,6 +83,7 @@ namespace ChallengeWebApp.Controllers
             }
 
             var topicCommand = await _context.Topics
+                .AsNoTracking()
                 .Include(t => t.IdentityUser)
                 .Where(m => m.Id == id)
                 .Select(topic => new EditTopicCommand
@@ -137,6 +138,7 @@ namespace ChallengeWebApp.Controllers
             }
 
             var topic = await _context.Topics
+                .AsNoTracking()
                 .Include(t => t.IdentityUser)
                 .Where(m => m.Id == id)
                 .Select(topic => new TopicViewModel

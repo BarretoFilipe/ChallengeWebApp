@@ -1,0 +1,93 @@
+﻿@model IEnumerable<ChallengeWebApp.Application.TopicViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Topics</h1>
+
+<p class="float-right">
+    <a asp-action="Create" class="btn btn-primary">New Topic</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreationDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdentityUserName)
+            </th>
+            <th class="text-center">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr id="row_@item.Id">
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreationDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdentityUserName)
+                </td>
+                <td class="text-right">
+                    @if (item.IdentityUserId == ViewBag.IdentityUserId)
+                    {
+                        <a asp-action="Edit" class="btn btn-info" asp-route-id="@item.Id">Edit</a>
+                    }
+                    <a asp-action="Details" class="btn btn-light" asp-route-id="@item.Id">Details</a>
+                    <a href="#" onclick="deleteTopic('@item.Id')" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+    function deleteTopic(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#1b6ec2',
+            cancelButtonColor: '#dc3545',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const playload = {
+                    id: id
+                }
+                axios.delete(
+                    '@Url.Action("Delete", "Topic")',
+                    { params: playload }
+                ).then(result => {
+                    document.getElementById(`row_${id}`).remove()
+                    Swal.fire(
+                        'Deleted!',
+                        'This Topic has been deleted.',
+                        'success'
+                    )
+                }).catch(result => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Topic was not deleted!',
+                    })
+                })                
+            }
+        })
+    }
+</script>

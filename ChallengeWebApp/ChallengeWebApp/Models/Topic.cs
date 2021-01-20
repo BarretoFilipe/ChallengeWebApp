@@ -17,7 +17,7 @@ namespace ChallengeWebApp.Models
 
         public Topic(string title, string description, string identityUserId)
         {
-            Id = new Guid();
+            Id = Guid.NewGuid();
             Title = title;
             Description = description;
             IdentityUserId = identityUserId;
